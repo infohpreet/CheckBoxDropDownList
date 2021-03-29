@@ -1,0 +1,57 @@
+﻿@model Web.Models.CheckBoxDropDownListViewModel
+@{
+    var displayValue = string.Empty;
+
+    foreach (var item in Model.SelectedItems)
+    {
+        displayValue += $"{Model.Items[item]},";
+    }
+
+    displayValue = displayValue.TrimEnd(',');
+
+    var functionName = $"{Model.ControlName}_ItemSelectionChanged()";
+}
+<div class="form-group" id="dropdownList" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div class="input-group">
+        <input id="input_@Model.ControlName" type="text" readonly="readonly" class="form-control bg-light small" placeholder="Select" aria-label="Search" aria-describedby="basic-addon2" value="@displayValue">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button">
+                <div style="width: 10px;height: 8px;background-color:white;clip-path: polygon(0 0, 100% 0, 50% 100%);"></div>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="dropdown-menu border-0 bg-transparent animated--fade-in" aria-labelledby="dropdownList" x-placement="bottom-start" style="padding-top:0px;position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+    <div style="overflow:auto;max-height:400px;background-color: #f5f5f5;border: 1px solid #d3d3d3;">
+        @foreach (var key in Model.Items.Keys)
+        {
+            <div class="bg-gradient-light text-gray-900 p-2 pl-3 font-weight-light">
+                @if (Model.SelectedItems.Contains(key))
+                {
+                    <input id='@Guid.NewGuid().ToString().Replace("_","")' class="@Model.ControlName" type="checkbox" onclick="@functionName" checked="checked" value="@key" text="@Model.Items[key]" /><span class="ml-1 mr-4">@Model.Items[key]</span>
+                }
+                else
+                {
+                    <input id='@Guid.NewGuid().ToString().Replace("_","")' class="@Model.ControlName" type="checkbox" onclick="@functionName" value="@key" text="@Model.Items[key]" /><span class="ml-1 mr-4">@Model.Items[key]</span>
+                }
+            </div>
+        }
+    </div>
+</div>
+<input type="hidden" id="hidden_@Model.ControlName" name="@Model.ControlName" value="@Model.SelectedItemsCsv" />
+<script>
+    function @functionName {
+
+        var checkedVals = $('.@Model.ControlName:checkbox:checked').map(function () {
+            return this.value;
+        }).get();
+
+        $('#hidden_@Model.ControlName').val(checkedVals.join(","));
+
+        var checkedTexts = $('.@Model.ControlName:checkbox:checked').map(function () {
+            return $('#' + this.id).attr('text');
+        }).get();
+
+        $('#input_@Model.ControlName').val(checkedTexts.join(","));
+    }
+</script>

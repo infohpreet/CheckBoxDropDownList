@@ -1,0 +1,42 @@
+﻿@model Web.Models.IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<form asp-controller="Home" asp-action="Index">
+    <div class="card">
+        <div class="card-header">
+            CheckBox DropDown List
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Select Spoken Languages</label>
+                        @await Html.PartialAsync("~/Views/Shared/_CheckBoxDropDownList.cshtml", Model.SpokenLanguageViewModel)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.SelectedLanguagesCsv))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>You have selected</label>
+                            <label class="form-control">@Model.SelectedLanguagesCsv</label>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
